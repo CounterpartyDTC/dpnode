@@ -1,0 +1,52 @@
+dogecoind:
+  build: dogecoind-docker
+  volumes:
+    - data/dogecoind/dogecoin/data:/dogecoin/data
+  command: "bash -c 'sudo chown -R dogecoin:dogecoin /dogecoin/data && dogecoind'"
+
+
+insight:
+  build: insight-doge-api
+  volumes:
+    - data/insight/root/data:/root/data
+  links:
+    - dogecoind:dogecoind
+  command: "node insight.js"
+
+
+dogepartyd:
+  build: dogepartyd-docker
+  volumes:
+    - data/dogepartyd/dogeparty/data:/dogeparty/data
+  links:
+    - dogecoind:dogecoind
+    - insight:insight
+  command: "bash -c 'chown -R dogeparty:dogeparty /dogeparty/data && counterpartyd-cli --backend-rpc-connect=dogecoind --backend-rpc-port=22555 --blockchain-service-connect=http://insight:3000 --verbose server'"
+
+
+mongo:
+  image: mongo
+  volumes:
+    - data/mongo/data/db:/data/db
+  command: "mongod"
+
+
+dogeblockd:
+  build: dogeblockd-docker
+  volumes:
+    - data/dogeblockd/dogeblock/data:/dogeblock/data
+  links:
+    - insight:insight
+    - dogepartyd:dogepartyd
+    - mongo:mongo
+  command: "bash -c 'chown -R dogeblock:dogeblock /dogeblock/data && counterblockd --counterpartyd-rpc-connect=dogepartyd --counterpartyd-rpc-port=4000 --counterpartyd-rpc-user=user --counterpartyd-rpc-password=pass --blockchain-service-name=insight --blockchain-service-connect=http://insight:3000 --mongodb-connect=mongo --mongodb-port=27017 --rpc-host=0.0.0.0 --rpc-port=4100 --socketio-host=0.0.0.0 --socketio-port=4101 --socketio-chat-host=0.0.0.0 --socketio-chat-port=4102'"
+
+
+wallet:
+  build: dogeparty-wallet-dev-server-docker
+  volumes:
+    - data/wallet/data/dogeparty-wallet/build:/data/dogeparty-wallet/build
+  links:
+    - dogeblockd:dogeblockd
+  command: "dogeparty-wallet-dev-server"
+
