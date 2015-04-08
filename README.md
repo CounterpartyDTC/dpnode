@@ -15,7 +15,7 @@ chmod +x /usr/local/bin/fig
 
 # Clone all the necessary repos into a project folder:
 cd
-mkdir dpnode
+git clone https://github.com/Dogeparty/dpnode.git
 cd dpnode
 git clone https://github.com/Dogeparty/dogecoind-docker.git
 git clone https://github.com/Dogeparty/insight-docker.git
