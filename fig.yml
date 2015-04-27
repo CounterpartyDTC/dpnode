@@ -44,8 +44,6 @@ dogeblockd:
 
 wallet:
   build: dogeparty-wallet-dev-server-docker
-  volumes:
-    - data/wallet/data/dogeparty-wallet/build:/data/dogeparty-wallet/build
   links:
     - dogeblockd:dogeblockd
   command: "dogeparty-wallet-dev-server"
