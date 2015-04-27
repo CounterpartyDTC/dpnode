@@ -46,5 +46,7 @@ wallet:
   build: dogeparty-wallet-dev-server-docker
   links:
     - dogeblockd:dogeblockd
+  ports:
+    - "80:8080"
   command: "dogeparty-wallet-dev-server"
 
