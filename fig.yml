@@ -52,7 +52,7 @@ wallet:
 
 
 ssl:
-  image: nginx:1.7.1
+  image: nginx:1.7.12
   volumes:
     - ssl/conf.d:/etc/nginx/conf.d
     - ~/ssl:/ssl
