@@ -46,7 +46,19 @@ wallet:
   build: dogeparty-wallet-dev-server-docker
   links:
     - dogeblockd:dogeblockd
-  ports:
-    - "80:8080"
+  # ports:
+  #   - "80:8080"
   command: "dogeparty-wallet-dev-server"
+
+
+ssl:
+  image: nginx:1.7.1
+  volumes:
+    - ssl/conf.d:/etc/nginx/conf.d
+    - ~/ssl:/ssl
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - wallet:wallet
 
