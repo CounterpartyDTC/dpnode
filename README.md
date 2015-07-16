@@ -30,10 +30,15 @@ ln insight-docker/Dockerfile insight-doge-api/Dockerfile
 # Let's build all machines
 fig build
 
-# dogecoind has to sync first
-fig up -d dogecoind
+# start the beast
+# CTRL-C then stops only the log tail, not the components
+fig up -d ; fig logs
 
-# And now start all the other components
-fig up
+# check the status of each node with:
+# (each component should have the status 'up'
+fig ps
+
+# Usually dogepartyd doesn't have enought time to start, restart with:
+fig scale dogepartyd=1
 ```
 
